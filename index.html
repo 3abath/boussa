@@ -84,27 +84,22 @@
   </div>
 
   <script>
-    const COUNTER_KEY = "globalCounter";
+    const COUNTER_URL = 'https://script.google.com/macros/s/AKfycbxicTMvGk-lfzCAVoodnHjFTBx0ogHsruy9hpoTMsI2g04Aj5WtAKAc0DSmzb_sJPJJ/exec'; // Your Web App URL
 
     async function getCounter() {
-      // Simulating a server fetch using localStorage
-      return parseInt(localStorage.getItem(COUNTER_KEY)) || 0;
-    }
-
-    async function setCounter(value) {
-      // Simulating a server update using localStorage
-      localStorage.setItem(COUNTER_KEY, value);
+      const response = await fetch(`${COUNTER_URL}?action=get`);
+      const data = await response.text();
+      return data;
     }
 
     async function incrementCounter() {
-      let count = await getCounter();
-      count++;
-      await setCounter(count);
-      updateCounterDisplay(count);
+      const response = await fetch(`${COUNTER_URL}?action=increment`);
+      const data = await response.text();
+      updateCounterDisplay(data);
     }
 
     function updateCounterDisplay(value) {
-      document.getElementById("counter").innerText = value;
+      document.getElementById("counter").innerText = `Counter: ${value}`;
     }
 
     function closeApp() {
@@ -112,13 +107,11 @@
       app.style.display = "none";
     }
 
-    async function initialize() {
+    // Initialize the counter on page load
+    window.onload = async function() {
       const count = await getCounter();
       updateCounterDisplay(count);
-    }
-
-    // Initialize the counter on page load
-    window.onload = initialize;
+    };
   </script>
 </body>
 </html>
